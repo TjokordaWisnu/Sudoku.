@@ -316,11 +316,15 @@ public class SudokuUI extends javax.swing.JFrame {
     }//GEN-LAST:event_resetGameActionPerformed
 
     private void intermediatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_intermediatorActionPerformed
-
+        gameMode = Sudoku.GAME_MODE_MEDIUM;
+        int[][] puzzle = sudoku.getNewPuzzle(grid, gameMode);
+        createBoard(puzzle);
     }//GEN-LAST:event_intermediatorActionPerformed
 
     private void expartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_expartActionPerformed
-
+        gameMode = Sudoku.GAME_MODE_EXPART;
+        int[][] puzzle = sudoku.getNewPuzzle(grid, gameMode);
+        createBoard(puzzle);
     }//GEN-LAST:event_expartActionPerformed
 
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
@@ -328,7 +332,9 @@ public class SudokuUI extends javax.swing.JFrame {
     }//GEN-LAST:event_exitActionPerformed
 
     private void beginnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_beginnerActionPerformed
-
+        gameMode = Sudoku.GAME_MODE_EASY;
+        int[][] puzzle = sudoku.getNewPuzzle(grid, gameMode);
+        createBoard(puzzle);
     }//GEN-LAST:event_beginnerActionPerformed
 
     private void newGame6X6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGame6X6ActionPerformed
