@@ -21,6 +21,11 @@ public class Inputs extends javax.swing.JPanel {
     private int numberOfInput;
     /** Creates new form Inputs */
     public Inputs(SudokuUI board, JPanel block, JButton inButton, int numberOfInput) {
+        this.board = board;
+        this.block = block;
+        this.inputButton = inButton;
+        this.numberOfInput = numberOfInput;
+        initComponents();
     }
 
     /** This method is called from within the constructor to
