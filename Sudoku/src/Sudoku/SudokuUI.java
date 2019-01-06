@@ -305,11 +305,14 @@ public class SudokuUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void newGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGameActionPerformed
-
+        grid = Sudoku.GRID_9X9;
+        int[][] puzzle = sudoku.getNewPuzzle(grid, gameMode);
+        createBoard(puzzle);
     }//GEN-LAST:event_newGameActionPerformed
 
     private void resetGameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetGameActionPerformed
-
+        int[][] puzzle = sudoku.resetPuzzle();
+        createBoard(puzzle);
     }//GEN-LAST:event_resetGameActionPerformed
 
     private void intermediatorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_intermediatorActionPerformed
@@ -321,6 +324,7 @@ public class SudokuUI extends javax.swing.JFrame {
     }//GEN-LAST:event_expartActionPerformed
 
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
+        System.exit(0);
     }//GEN-LAST:event_exitActionPerformed
 
     private void beginnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_beginnerActionPerformed
@@ -328,23 +332,34 @@ public class SudokuUI extends javax.swing.JFrame {
     }//GEN-LAST:event_beginnerActionPerformed
 
     private void newGame6X6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGame6X6ActionPerformed
-
+        grid = Sudoku.GRID_6X6;
+        int[][] puzzle = sudoku.getNewPuzzle(grid, gameMode);
+        createBoard(puzzle);
     }//GEN-LAST:event_newGame6X6ActionPerformed
 
     private void pauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pauseActionPerformed
-
+        stopWatch.pause();
+        paused = true;
+        showMessage("Paused");
     }//GEN-LAST:event_pauseActionPerformed
 
     private void resumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resumeActionPerformed
-
+        stopWatch.resume();
+        paused = false;
+        holder.removeAll();
+        holder.add(board);
+        holder.repaint();
+        this.setVisible(true);
     }//GEN-LAST:event_resumeActionPerformed
 
     private void resetGameButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetGameButActionPerformed
- 
+        int[][] puzzle = sudoku.resetPuzzle();
+        createBoard(puzzle);
     }//GEN-LAST:event_resetGameButActionPerformed
 
     private void newGameButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGameButActionPerformed
-
+        int[][] puzzle = sudoku.getNewPuzzle(grid, gameMode);
+        createBoard(puzzle);
     }//GEN-LAST:event_newGameButActionPerformed
 
     private void submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitActionPerformed
