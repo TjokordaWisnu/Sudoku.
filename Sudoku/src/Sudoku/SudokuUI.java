@@ -23,6 +23,7 @@ public class SudokuUI extends javax.swing.JFrame {
     private JButton[][] buttons;
     private ActionListener[][] actionListener;
     private JPanel[][] blocks;
+    private Sudoku sudoku;
     private int gameMode;
     private int grid;
     private boolean paused;
@@ -30,18 +31,14 @@ public class SudokuUI extends javax.swing.JFrame {
 
     /** Creates new form UI */
     public SudokuUI() {
-
+        sudoku = new Sudoku();
+        gameMode = Sudoku.GAME_MODE_MEDIUM;
+        grid = Sudoku.GRID_9X9;
         stopWatch = new StopWatch();
         paused = false;
         initComponents();
+        initialize();
         startTimer();
-    }
-public void setInput(String ans, JPanel block, JButton inputButtton) {
-        block.removeAll();
-        inputButtton.setText(ans);
-        inputButtton.setFont(new java.awt.Font("Tahoma", 1, 24));
-        block.add(inputButtton);
-        this.repaint();
     }
 
     /** This method is called from within the constructor to
@@ -331,7 +328,7 @@ public void setInput(String ans, JPanel block, JButton inputButtton) {
     }//GEN-LAST:event_beginnerActionPerformed
 
     private void newGame6X6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGame6X6ActionPerformed
- 
+
     }//GEN-LAST:event_newGame6X6ActionPerformed
 
     private void pauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pauseActionPerformed
@@ -339,16 +336,11 @@ public void setInput(String ans, JPanel block, JButton inputButtton) {
     }//GEN-LAST:event_pauseActionPerformed
 
     private void resumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resumeActionPerformed
-        stopWatch.resume();
-        paused = false;
-        holder.removeAll();
-        holder.add(board);
-        holder.repaint();
-        this.setVisible(true);
+
     }//GEN-LAST:event_resumeActionPerformed
 
     private void resetGameButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetGameButActionPerformed
-
+ 
     }//GEN-LAST:event_resetGameButActionPerformed
 
     private void newGameButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGameButActionPerformed
@@ -356,13 +348,138 @@ public void setInput(String ans, JPanel block, JButton inputButtton) {
     }//GEN-LAST:event_newGameButActionPerformed
 
     private void submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitActionPerformed
-
+        if (!isAnsComplete()) {
+            JOptionPane.showMessageDialog(this, "Please complete your answer.");
+        } else {
+            stopWatch.stop();
+            boolean isAnsCorrect = sudoku.check(getAns());
+            String messageStr = "";
+            if (isAnsCorrect) {
+                messageStr = "Congratulation You have won the Game in " + timeLabel.getText();
+            } else {
+                messageStr = "Sorry You have failed. ";
+            }
+            showMessage(messageStr);
+        }
     }//GEN-LAST:event_submitActionPerformed
 
     private void aboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutActionPerformed
         JOptionPane.showMessageDialog(this, "Author: Tjokorda, Geraldi\nInstitute: CCIT");
     }//GEN-LAST:event_aboutActionPerformed
 
+    private void createBoard(int[][] puzzle) {
+        board.removeAll();
+        grid = puzzle.length;
+        blocks = new JPanel[grid][grid];
+        buttons = new JButton[grid][grid];
+        actionListener = new ActionListener[grid][grid];
+        board.setLayout(new GridLayout(grid, grid, 3, 3));
+
+        int rowsInGrid = grid == 9 ? 3 : 2;
+
+        for (int i = 0; i < grid; i++) {
+            for (int j = 0; j < grid; j++) {
+                blocks[i][j] = new JPanel();
+                buttons[i][j] = new JButton();
+                String text = "";
+                if (0 < puzzle[i][j] && puzzle[i][j] <= grid) {
+                    text += puzzle[i][j];
+                } else {
+                    final JButton tempbutton = buttons[i][j];
+                    final JPanel tempBlock = blocks[i][j];
+                    actionListener[i][j] = new ActionListener() {
+
+                        public void actionPerformed(ActionEvent e) {
+                            viewInputs(tempBlock, tempbutton, grid);
+                        }
+                    };
+                    buttons[i][j].addActionListener(actionListener[i][j]);
+                }
+                buttons[i][j].setText(text);
+                buttons[i][j].setFont(new java.awt.Font("Tahoma", 0, 24));
+
+                if (((0 <= i && i < rowsInGrid) || (rowsInGrid * 2 <= i && i < grid)) && (3 <= j && j < 6)) {
+                    buttons[i][j].setBackground(new java.awt.Color(204, 204, 204));
+                } else if ((rowsInGrid <= i && i < rowsInGrid * 2) && ((0 <= j && j < 3) || (6 <= j && j < 9))) {
+                    buttons[i][j].setBackground(new java.awt.Color(204, 204, 204));
+                } else {
+                    buttons[i][j].setBackground(new java.awt.Color(255, 255, 255));
+                }
+                blocks[i][j].setLayout(new GridLayout(1, 1));
+                blocks[i][j].add(buttons[i][j]);
+                board.add(blocks[i][j]);
+            }
+        }
+
+        holder.removeAll();
+        holder.add(board);
+        board.repaint();
+        holder.repaint();
+        this.setVisible(true);
+        stopWatch.start();
+    }
+
+    private void initialize() {
+        int[][] puzzle = sudoku.getNewPuzzle(grid, gameMode);
+        createBoard(puzzle);
+    }
+
+    private void viewInputs(JPanel block, JButton inputButtton, int numOfInput) {
+        JPanel inputs = new Inputs(this, block, inputButtton, numOfInput);
+        block.remove(inputButtton);
+        block.add(inputs);
+        this.setVisible(true);
+    }
+
+    public void setInput(String ans, JPanel block, JButton inputButtton) {
+        block.removeAll();
+        inputButtton.setText(ans);
+        inputButtton.setFont(new java.awt.Font("Tahoma", 1, 24));
+        block.add(inputButtton);
+        this.repaint();
+    }
+
+    private int[][] getAns() {
+        int ans[][] = new int[grid][grid];
+
+        for (int i = 0; i < grid; i++) {
+            for (int j = 0; j < grid; j++) {
+                try {
+                    ans[i][j] = Integer.parseInt(buttons[i][j].getText());
+                } catch (NumberFormatException e) {
+                    ans[i][j] = 0;
+                }
+            }
+        }
+
+        return ans;
+    }
+
+    private boolean isAnsComplete() {
+        boolean isAnsComplete = true;
+        for (int i = 0; i < grid; i++) {
+            for (int j = 0; j < grid; j++) {
+                try {
+                    Integer.parseInt(buttons[i][j].getText());
+                } catch (NumberFormatException e) {
+                    isAnsComplete = false;
+                    break;
+                }
+            }
+        }
+        return isAnsComplete;
+    }
+
+    private void showMessage(String message) {
+        JLabel messageLabel = new JLabel();
+        messageLabel.setFont(new java.awt.Font("Tahoma", 1, 20));
+        messageLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        messageLabel.setText(message);
+        holder.removeAll();
+        holder.add(messageLabel);
+        holder.repaint();
+        this.setVisible(true);
+    }
 
     private void startTimer() {
         Thread thread = new Thread(new Runnable() {

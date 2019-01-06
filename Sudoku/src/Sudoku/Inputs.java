@@ -26,6 +26,12 @@ public class Inputs extends javax.swing.JPanel {
         this.inputButton = inButton;
         this.numberOfInput = numberOfInput;
         initComponents();
+
+        if(numberOfInput < 7) {
+            this.remove(seven);
+            this.remove(eight);
+            this.remove(nine);
+        }
     }
 
     /** This method is called from within the constructor to
@@ -112,11 +118,6 @@ public class Inputs extends javax.swing.JPanel {
                 setAns(evt);
             }
         });
-        five.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                fiveActionPerformed(evt);
-            }
-        });
         add(five);
 
         six.setBackground(new java.awt.Color(255, 255, 255));
@@ -171,10 +172,6 @@ public class Inputs extends javax.swing.JPanel {
         });
         add(nine);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void fiveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fiveActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_fiveActionPerformed
 
     private void setAns(java.awt.event.ActionEvent evt){
         board.setInput(evt.getActionCommand(), block, inputButton);
