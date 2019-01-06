@@ -20,9 +20,22 @@ import javax.swing.JPanel;
  */
 public class SudokuUI extends javax.swing.JFrame {
 
+    private JButton[][] buttons;
+    private ActionListener[][] actionListener;
+    private JPanel[][] blocks;
+    private int gameMode;
+    private int grid;
+    private boolean paused;
+    private final StopWatch stopWatch;
 
     /** Creates new form UI */
+    public SudokuUI() {
 
+        stopWatch = new StopWatch();
+        paused = false;
+        initComponents();
+        startTimer();
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -304,7 +317,6 @@ public class SudokuUI extends javax.swing.JFrame {
     }//GEN-LAST:event_expartActionPerformed
 
     private void exitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitActionPerformed
-
     }//GEN-LAST:event_exitActionPerformed
 
     private void beginnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_beginnerActionPerformed
@@ -312,7 +324,7 @@ public class SudokuUI extends javax.swing.JFrame {
     }//GEN-LAST:event_beginnerActionPerformed
 
     private void newGame6X6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGame6X6ActionPerformed
-
+ 
     }//GEN-LAST:event_newGame6X6ActionPerformed
 
     private void pauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pauseActionPerformed
@@ -320,11 +332,16 @@ public class SudokuUI extends javax.swing.JFrame {
     }//GEN-LAST:event_pauseActionPerformed
 
     private void resumeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resumeActionPerformed
-
+        stopWatch.resume();
+        paused = false;
+        holder.removeAll();
+        holder.add(board);
+        holder.repaint();
+        this.setVisible(true);
     }//GEN-LAST:event_resumeActionPerformed
 
     private void resetGameButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetGameButActionPerformed
-  
+
     }//GEN-LAST:event_resetGameButActionPerformed
 
     private void newGameButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newGameButActionPerformed
@@ -332,13 +349,29 @@ public class SudokuUI extends javax.swing.JFrame {
     }//GEN-LAST:event_newGameButActionPerformed
 
     private void submitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitActionPerformed
-     
+
     }//GEN-LAST:event_submitActionPerformed
 
     private void aboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aboutActionPerformed
+        JOptionPane.showMessageDialog(this, "Author: Tjokorda, Geraldi\nInstitute: CCIT");
     }//GEN-LAST:event_aboutActionPerformed
 
-    
+
+    private void startTimer() {
+        Thread thread = new Thread(new Runnable() {
+
+            public void run() {
+                stopWatch.start();
+                while (true) {
+                    if (!paused) {
+                        final String timeString = new SimpleDateFormat("mm:ss:SSS").format(stopWatch.getElapsedTime());
+                        timeLabel.setText("" + timeString);
+                    }
+                }
+            }
+        });
+        thread.start();
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem about;
     private javax.swing.JPanel base;
