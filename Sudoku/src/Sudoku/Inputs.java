@@ -177,7 +177,7 @@ public class Inputs extends javax.swing.JPanel {
     }//GEN-LAST:event_fiveActionPerformed
 
     private void setAns(java.awt.event.ActionEvent evt){
-     
+        board.setInput(evt.getActionCommand(), block, inputButton);
     }
 
 

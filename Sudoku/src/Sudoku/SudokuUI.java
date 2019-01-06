@@ -36,6 +36,13 @@ public class SudokuUI extends javax.swing.JFrame {
         initComponents();
         startTimer();
     }
+public void setInput(String ans, JPanel block, JButton inputButtton) {
+        block.removeAll();
+        inputButtton.setText(ans);
+        inputButtton.setFont(new java.awt.Font("Tahoma", 1, 24));
+        block.add(inputButtton);
+        this.repaint();
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.
